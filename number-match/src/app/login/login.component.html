@@ -1,0 +1,78 @@
+<section *ngIf="mostrarComponente">
+    <body *ngIf="loginVar">
+        <section>
+            <div class="titulo">
+                <h1>Number Match</h1>
+            </div>
+            <div class="form-box">
+                <div class="form-value">
+                    <form action="">
+                        <h2>Login</h2>
+                        <div class="inputbox">
+                            <ion-icon name="person-outline"></ion-icon>
+                            <input type="text" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" required>
+                            <label for="">User</label>
+                        </div>
+                        <div class="inputbox">
+                            <ion-icon name="lock-closed-outline"></ion-icon>
+                            <input type="password" [(ngModel)]="pwd1" [ngModelOptions]="{standalone: true}" required>
+                            <label for="">Password</label>
+                        </div>
+                        <div class="forget">
+                            <label for=""><input type="checkbox">Remember me</label>
+                        </div>
+                        <button (click)="login()">Log in</button>
+                        <div class="register">
+                            <p (click) ="changeLogin()">Don't have an account? <a href="#">Register</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </body>
+
+    <body *ngIf="!loginVar">
+        <section>
+            <div class="titulo">
+                <h1>Number Match</h1>
+            </div>
+            <div class="form-box2">
+                <div class="form-value">
+                    <form action="">
+                        <h2>Register</h2>
+                        <div class="inputbox">
+                            <ion-icon name="person-outline"></ion-icon>
+                            <input type="text" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" required>
+                            <label for="">User</label>
+                        </div>
+                        <div class="inputbox">
+                            <ion-icon name="mail-outline"></ion-icon>
+                            <input type="text" [(ngModel)]="email"  [ngModelOptions]="{standalone: true}" required>
+                            <label for="">Email</label>
+                        </div>
+                        <div class="inputbox">
+                            <ion-icon name="lock-closed-outline"></ion-icon>
+                            <input type="password" [(ngModel)]="pwd1" [ngModelOptions]="{standalone: true}" required>
+                            <label for="">Password</label>
+                        </div>
+                        <div class="inputbox">
+                            <ion-icon name="lock-closed-outline"></ion-icon>
+                            <input type="password" [(ngModel)]="pwd2" [ngModelOptions]="{standalone: true}" required>
+                            <label for="">Repeat Password</label>
+                        </div>
+                        <button (click)="register()">Register</button>
+                        <div class="Login">
+                            <p (click)="changeLogin()">Already have an account? <a href="#">Log In</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </body>
+</section>
+<div *ngIf="!mostrarComponente">
+    <app-inicio-juego></app-inicio-juego>
+</div>
+
+
+

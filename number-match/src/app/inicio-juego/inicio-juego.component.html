@@ -1,0 +1,124 @@
+<section *ngIf="mostrarElemento">
+
+   <div class="top-bar">
+    <div class="logo">
+      <img src="assets/icono_app.jpg" alt="Icono de la aplicación" >
+    </div>
+
+    <div style="margin-left:auto">
+      <button class="info-button" (click)="toggleInstrucciones()">¿Cómo Jugar?</button>
+      <div class="dropdown" (click)="toggleDropdown()">
+        <button class="login-button">
+          <ion-icon name="person"></ion-icon>
+          {{name}}
+          <ion-icon name="chevron-down"></ion-icon>
+        </button>
+        <ul class="dropdown-list" [ngClass]="{'show': showDropdown}">
+          <li (click)="logout()"><ion-icon name="log-out"></ion-icon> Cerrar sesión</li>
+          <li (click)="toggleDropdown()"><ion-icon name="settings"></ion-icon> Ajustes</li>
+        </ul>
+      </div>
+
+    </div>
+
+  </div>
+      <div *ngIf="instruccionesVisible" class="instrucciones-dropdown">
+        <div class="scroll-container">
+          <p style="font-size: 80px; text-align: center; margin-top: 80px; margin-left: 50px;">
+            ¿Cómo se juega?
+            <ion-icon name="book-outline" style="font-size: 80px; vertical-align: middle; margin-left: 20px;"></ion-icon>
+          </p>
+          <br>
+          <br>
+          <br>
+          <br>
+            <p style="font-size: 18px; text-align: left; margin: 0 35px;">• El objetivo es despejar el tablero.</p>
+            <p style="font-size: 18px;text-align: left; margin: 0 35px;">• Busca parejas de números iguales (1 y 1,7 y 7) o parejas que sumen 10 (6 y 4, 8 y 2) en la cuadrícula de números.</p>
+            <p style="font-size: 18px;text-align: left; margin:0 35px;">• Toca los números uno por uno para poderlos tachar y ganar puntos.</p>
+            <p style="font-size: 18px;text-align: left; margin: 0 35px;;">• Puedes conectar parejas en celdas adyacentes horizontales, verticales y en diagonal, así como al final de una línea y al principio de la siguiente.</p>
+            <p style="font-size: 18px;text-align: left; margin: 0 35px;">• Si te quedas sin movimientos, puedes añadir líneas adicionales con los números restantes en la parte inferior.</p>
+            <p style="font-size: 18px;text-align: left; margin: 0 35px;">• Puedes usar pistas para acelerar tu progreso si te atascas.</p>
+            <p style="font-size: 18px;text-align: left; margin: 0 35px;">• Ganas cuando havas eliminado todos los números de la cuadrícula del rompecabezas.</p>
+          <br>
+          <br>
+          <br>
+          <p style="font-size: 25px;text-align: center; margin: 0 20px;">Hay muchas maneras de resolver el puzzle. Pero no es tan fácil como parece.</p>
+          <p style="font-size: 25px;text-align: center; margin: 0 20px;">¡Pon a prueba tu mente y disfruta de una experiencia emocionante!</p>
+          <div style="display:flex; justify-content:center; align-items:center;">
+            <iframe width="560" height="315" src="assets/juego.mp4" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="margin-bottom: 40px; margin-top:20px;"></iframe>
+          </div>
+        </div>
+      </div>
+
+
+
+    <div *ngIf="!instruccionesVisible" class="button-container">
+      <div class="container">
+        <h1 class="titulo" [@letterAnimation]>
+          <span>N</span>
+          <span>U</span>
+          <span>M</span>
+          <span>B</span>
+          <span>E</span>
+          <span>R</span>
+          <span>&nbsp;</span> <!-- Agregar espacio en blanco -->
+          <span>M</span>
+          <span>A</span>
+          <span>T</span>
+          <span>C</span>
+          <span>H</span>
+        </h1>
+        <p class="descripcion">Number Match es un puzzle adictivo con unas reglas sencillas: combina las parejas y despeja el tablero para ganar. ¡Entrena tus habilidades de lógica y concentración e intenta batir tú record de puntuación!. ¿Podrás superar el desafío?</p>
+        <div class="container_buttons">
+            <button class="button"  (click)="playFree()">Jugar Versión gratuita</button>
+            <button class="button" (click)="playPaid()">Jugar Versión de pago</button>
+          </div>
+
+
+
+
+    </div>
+
+
+  </div>
+
+</section>
+<div *ngIf="iniciarJuegoGratis && !mostrarElemento">
+  <section *ngIf="!mostrarElemento">
+    <div class="tablero">
+        <table width="500" height="500" border="1" cellspacing="2" cellpadding="2" bgcolor="#000000">
+            <tr *ngFor="let row of tableroPadre; let i = index" align="center">
+                <td width="50" height="50" *ngFor="let col of row; let j = index" (click)="onCellClicked(i,j) " bgcolor="#ffffff">
+                    <span *ngIf="col"> {{col}} </span>
+                    <span *ngIf="!col">  </span>
+                </td>
+            </tr>
+        </table>
+        <button class="botonAgregar" (click)="addRows()"> + </button>
+    </div>
+  </section>
+</div>
+<div *ngIf="iniciarPago && !mostrarElemento">
+  <section *ngIf="!mostrarElemento">
+    <p>Esto es la version de pago</p>
+    <p>holaaaa</p>
+    <a href="#" (click)="pay()">Pagar 100 euros</a>
+    <form id="payment-form" style="display:none">
+      <div id="card-element"></div>
+      <button id="submit">
+        <div class="spinner hidden" id="spinner"></div>
+        <span id="button-text">Pay now</span>
+      </button>
+      <p id="card-error" role="alert"></p>
+      <p class="result-message hidden">
+        Payment succeeded, see the result in your
+        <a href="" target="_blank">Stripe dashboard.</a> Refresh the page to pay again.
+      </p>
+    </form>
+
+
+  </section>
+</div>
+<div *ngIf="!mostrarElemento && cerrarSesion">
+  <app-login></app-login>
+</div>

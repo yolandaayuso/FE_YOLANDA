@@ -1,0 +1,250 @@
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color:#eef7ff;
+
+}
+
+.titulo {
+  font-size: 100px;
+  font-weight: bold;
+  font-family: "Montserrat", sans-serif;
+
+  color: #0d4b68;
+  margin-left: 10px;
+  margin-top: 0px;
+  }
+
+.descripcion {
+font-size: 1.5rem;
+color: #0d4b68;
+text-align: center;
+margin-left: 50px;
+margin-right: 50px;
+
+
+}
+.button-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: row;
+
+}
+
+.button {
+  padding: 1rem 2rem;
+  font-size: 1.35rem;
+  border: none;
+  border-radius: 5px;
+  background-color: #0d4b68;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  width: 300px;
+  height: 90px;
+  text-decoration:#eef7ff;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.button:last-child {
+  margin-right: 0;
+}
+
+.button:hover {
+  background-color:#0d4b68;
+}
+
+.button a {
+  color: #fff;
+  text-decoration: 80c9eb;
+}
+
+
+.login-button,
+.info-button {
+  padding: 10px;
+  font-size: 16px;
+  width: 150px;
+}
+
+.login-button {
+  background-color:#0d4b68;
+  color: #fff;
+  margin-left: 20px; /* Agregar margen izquierdo para separar los botones */
+  width: 30 px;
+
+
+
+}
+
+.info-button {
+  background-color:#0d4b68;
+  color: #fff;
+  margin-left: 10px; /* Agregar margen izquierdo para separar los botones */
+
+}
+
+
+
+
+.instrucciones {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.instrucciones-toggle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items:  center;;
+  height: 100vh;
+  background-color:#eef7ff;;
+  color : #0d4b68;
+  text-align: right;
+  text-justify: auto;
+
+
+}
+
+
+.instrucciones-dropdown {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  height: 100vh;
+  background-color:#eef7ff;
+  color : #0d4b68;
+  text-align: left;
+  text-justify: auto;
+
+
+
+
+}
+
+.instrucciones-dropdown p {
+  margin-bottom: 0;
+
+}
+
+
+
+.top-bar {
+  background-color: #0d4b68;
+  color: #fff;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 50px;
+  padding: 0 20px;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  transition: all 0.3s ease;
+  border: 3px solid #ccc; /* Agregar borde al contenedor */
+  border-radius: 5px; /* Agregar bordes redondeados al contenedor */
+
+}
+
+.top-bar:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+.logo img {
+  display: inline-block;
+  vertical-align: center;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+
+
+}
+
+.logo span {
+  float: right;
+  font-size: 40px;
+}
+
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+
+}
+
+.dropdown-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: none;
+  position: absolute;
+  right: 0;
+  z-index: 1;
+  background-color: #0d4b68;
+  border-radius: 5px;
+
+}
+
+.show {
+  display: block;
+  padding: 10px;
+  font-size: 16px;
+  width: 150px;
+}
+
+
+
+
+.scroll-container {
+  height: 100vh;
+  overflow-y: scroll;
+
+
+}
+
+
+
+
+section{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color:#eef7ff;
+}
+
+span{
+  font-weight: bold;
+  user-select: none;
+}
+
+.botonAgregar{
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  margin-left: 225px;
+  margin-top: 50px;
+  font-size: 20px;
+  font-weight: bold;
+  border: 2px solid rgba(0,0,0);
+  border-radius: 30px;
+}
