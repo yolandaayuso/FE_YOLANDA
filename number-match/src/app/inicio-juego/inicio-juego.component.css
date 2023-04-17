@@ -248,3 +248,19 @@ span{
   border: 2px solid rgba(0,0,0);
   border-radius: 30px;
 }
+.realizar-pagobttn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+
+  background: #0d4b68;
+  color: #fff;
+  font-weight: bold;
+  border: 2px solid rgba(0,0,0);
+  border-radius: 30px;
+  margin-left: 400px;
+  margin-top: 50px;
+  cursor: pointer;
+
+}
