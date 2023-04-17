@@ -106,11 +106,13 @@ export class InicioJuegoComponent implements OnInit{
   this.cerrarSesion = false
   this.pay()
 
+
   }
 
 
 
   onCellClicked(row: number, col: number) {
+
     if (this.contador == 1) {
       this.matchNumbers(this.x1,this.y1,row,col)
       this.contador = 0
@@ -169,6 +171,12 @@ export class InicioJuegoComponent implements OnInit{
       console.log(error)
     })
   }
+
+
+
+
+
+
 
 
   pay(){
@@ -260,6 +268,17 @@ export class InicioJuegoComponent implements OnInit{
       }
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
