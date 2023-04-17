@@ -100,14 +100,13 @@
 </div>
 <div *ngIf="iniciarPago && !mostrarElemento">
   <section *ngIf="!mostrarElemento">
-    <p>Esto es la version de pago</p>
-    <p>holaaaa</p>
-    <a href="#" (click)="pay()">Pagar 100 euros</a>
+    <h1>Bienvenido a la versión premium del juego</h1>
+
     <form id="payment-form" style="display:none">
       <div id="card-element"></div>
       <button id="submit">
         <div class="spinner hidden" id="spinner"></div>
-        <span id="button-text">Pay now</span>
+        <button class="realizar-pagobttn"><span id="button-text">Pagar</span></button>
       </button>
       <p id="card-error" role="alert"></p>
       <p class="result-message hidden">
