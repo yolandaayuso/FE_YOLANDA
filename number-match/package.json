@@ -10,7 +10,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^15.2.0",
+    "@angular/animations": "^15.2.4",
     "@angular/common": "^15.2.0",
     "@angular/compiler": "^15.2.0",
     "@angular/core": "^15.2.0",
@@ -22,10 +22,12 @@
     "@ionic/angular": "^6.7.0",
     "@stripe/stripe-js": "^1.52.1",
     "@types/stripe-v3": "^3.1.28",
+    "all": "^0.0.0",
     "angular-websocket": "^2.0.1",
     "rxjs": "~7.8.0",
-    "stripe": "^12.1.1",
+    "stripe": "^12.2.0",
     "stripe-angular": "^1.9.3",
+    "sweetalert2": "^11.7.3",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"
   },
