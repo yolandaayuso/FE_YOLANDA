@@ -88,8 +88,8 @@ export class LoginComponent implements OnInit{
     this.AccountService.login(info).subscribe(
       respuesta => {
         sessionStorage.setItem("player",this.name)
-
-        this.mostrarComponente = false
+        sessionStorage.setItem("session_id",respuesta.sessionId)
+        this.mostrarComponente=false
 
 
       },

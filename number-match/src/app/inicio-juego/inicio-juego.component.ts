@@ -36,15 +36,18 @@ export class InicioJuegoComponent implements OnInit{
   iniciarJuegoGratis: boolean = false
   mostrarFormulario: boolean = true
   tableroPadre : any
+  tableroPadre1 : any
   id? : string
   contador : number = 0;
   x1 : number = 0
   y1 : number = 0
   token? : string
 
-
+  iniciarJuegoPago: boolean = false
 
   stripe = Stripe("pk_test_51MqBSKH7OM2285cjwfHb0Vw5mrIDQDS9F0SjZaPdp0DEUznmHxJtL17uT9bfjW75rSHu2bK9kFip2JpFANk7p4UQ00OrH3vfiH")
+  ws?:WebSocket
+    waitingForOpponent: boolean = true;
 
 
 
@@ -74,7 +77,6 @@ export class InicioJuegoComponent implements OnInit{
 
   toPrincipal(){
     this.mostrarElemento = true;
-
     // Reseteo de los valores de las variables
     this.iniciarJuegoGratis = false;
     this.iniciarPago = false;
@@ -98,7 +100,9 @@ export class InicioJuegoComponent implements OnInit{
   logout() {
     this.mostrarElemento = false
     this.cerrarSesion = true
-
+    this.iniciarJuegoPago = false
+    this.iniciarJuegoGratis = false
+    this.iniciarPago = false
 
   }
 
@@ -115,12 +119,52 @@ export class InicioJuegoComponent implements OnInit{
   this.mostrarElemento = false
   this.cerrarSesion = false
   this.pay()
-
-
   }
 
 
+  requestPaidGame() {
+    this.mostrarElemento = false
+    this.cerrarSesion = false
+    this.ws = new WebSocket('ws://localhost:8081/wsGames?httpSessionId=' + sessionStorage.getItem("session_id"));
 
+    this.ws.onopen = () => {
+      alert("Esperando a que tu contrincante entre en la partida...")
+
+    };
+
+    this.ws.onmessage = (event) => {
+      let info = event.data;
+      info = JSON.parse(info);
+      if (this.waitingForOpponent) {
+      alert("¡Tu contrincante ha entrado! ¡Comienza el juego!");
+      this.waitingForOpponent= false
+      }
+
+      this.multicreateTable(info);
+    };
+
+    this.GameService.requestPaidGame().subscribe(
+      (data: any) => {
+        this.id = data.id;
+        this.multicreateTable(data);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+
+  multiOnCellClicked(row: number, col: number) {
+    if (this.contador == 1) {
+      this.multiMatchNumbers(sessionStorage.getItem("player"),this.x1,this.y1,row,col)
+      this.contador = 0
+    }else if(this.contador == 0){
+      this.x1 = row
+      this.y1 = col
+      this.contador++
+    }
+  }
   onCellClicked(row: number, col: number) {
 
     if (this.contador == 1) {
@@ -144,6 +188,21 @@ export class InicioJuegoComponent implements OnInit{
       this.mostrarElemento = false
   }
 
+  multicreateTable(data : any){
+    if(data.boards != null){
+      const numbers: string[] = data.boards[0].digits
+      const board: string[][] = [];
+      const numbers1: string[] = data.boards[1].digits
+      const board1: string[][] = [];
+      for (let i = 0; i < 9; i++) {
+        board.push(numbers.slice(i * 9, i * 9 + 9));
+        board1.push(numbers1.slice(i * 9, i * 9 + 9));
+      }
+      this.tableroPadre = board
+      this.tableroPadre1 = board1
+      this.mostrarElemento = false
+    }
+  }
   requestGame(){
     this.GameService.requestGame().subscribe((data : any) => {
       this.id = data.id
@@ -181,7 +240,23 @@ export class InicioJuegoComponent implements OnInit{
       console.log(error)
     })
   }
-
+  multiMatchNumbers(player:any, x1: number, y1: number, x2: number, y2: number){
+    let info = {
+      id : this.id,
+      player: player.toString(),
+      x1 : x1.toString(),
+      y1 : y1.toString(),
+      x2 : x2.toString(),
+      y2 : y2.toString()
+    }
+    this.GameService.multiMatchNumbers(info).subscribe((data : any) => {
+      this.mostrarElemento = true
+      this.multicreateTable(data)
+    },
+    error => {
+      console.log(error)
+    })
+  }
 pay(){
 this.PaymentService.pay(2).subscribe((token) => {
   this.token = token;
@@ -260,7 +335,6 @@ paymentOk() {
           token: this.token ?? '' // si no existe token, que sea un string vacio
 
         }
-
         this.PaymentService.paymentOk(payload.token).subscribe((data : any) => {
           Swal.fire({
             title: 'Tu pago ha sido completado',
@@ -268,10 +342,15 @@ paymentOk() {
             icon: 'success',
             confirmButtonText: 'Aceptar'
           });
+          this.iniciarJuegoPago = true
+          this.iniciarPago = false
+          this.requestPaidGame()
+
         },
         error => {
           console.log(error)
         });
+
 }
 
 

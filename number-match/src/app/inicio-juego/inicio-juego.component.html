@@ -54,18 +54,18 @@
     <div *ngIf="!instruccionesVisible" class="button-container">
       <div class="container">
         <h1 class="titulo" [@letterAnimation]>
-          <span>N</span>
-          <span>U</span>
-          <span>M</span>
-          <span>B</span>
-          <span>E</span>
-          <span>R</span>
-          <span>&nbsp;</span> <!-- Agregar espacio en blanco -->
-          <span>M</span>
-          <span>A</span>
-          <span>T</span>
-          <span>C</span>
-          <span>H</span>
+          <span class="titulo">N</span>
+          <span class="titulo">U</span>
+          <span class="titulo">M</span>
+          <span class="titulo">B</span>
+          <span class="titulo">E</span>
+          <span class="titulo">R</span>
+          <span class="titulo">&nbsp;</span> <!-- Agregar espacio en blanco -->
+          <span class="titulo">M</span>
+          <span class="titulo">A</span>
+          <span class="titulo">T</span>
+          <span class="titulo">C</span>
+          <span class="titulo">H</span>
         </h1>
         <p class="descripcion">Number Match es un puzzle adictivo con unas reglas sencillas: combina las parejas y despeja el tablero para ganar. ¡Entrena tus habilidades de lógica y concentración e intenta batir tú record de puntuación!. ¿Podrás superar el desafío?</p>
         <div class="container_buttons">
@@ -101,23 +101,20 @@
     </div>
   </div>
 
-
-  <section *ngIf="!mostrarElemento">
-    <div class="tablero">
-        <table width="500" height="500" border="1" cellspacing="2" cellpadding="2" bgcolor="#000000">
-            <tr *ngFor="let row of tableroPadre; let i = index" align="center">
-                <td width="50" height="50" *ngFor="let col of row; let j = index" (click)="onCellClicked(i,j) " bgcolor="#ffffff">
-                    <span *ngIf="col"> {{col}} </span>
-                    <span *ngIf="!col">  </span>
-                </td>
-            </tr>
-        </table>
-        <button class="botonAgregar" (click)="addRows()"> + </button>
-    </div>
-  </section>
-</div>
-
-
+    <section *ngIf="!mostrarElemento">
+      <div class="tablero_gratis">
+          <table width="500" height="500" border="1" cellspacing="2" cellpadding="2" bgcolor="#000000">
+              <tr *ngFor="let row of tableroPadre; let i = index" align="center">
+                  <td width="50" height="50" *ngFor="let col of row; let j = index" (click)="onCellClicked(i,j) " bgcolor="#ffffff">
+                      <span *ngIf="col"> {{col}} </span>
+                      <span *ngIf="!col">  </span>
+                  </td>
+              </tr>
+          </table>
+          <button class="botonAgregar" (click)="addRows()"> + </button>
+      </div>
+    </section>
+  </div>
 
 <div *ngIf="iniciarPago && !mostrarElemento">
   <div class="top-bar">
@@ -153,7 +150,61 @@
         </button>
       </form>
     </section>
+
 </div>
+
+
+<div class="multiTablero" *ngIf="iniciarJuegoPago && !mostrarElemento">
+
+  <div class="top-bar">
+  <div class="logo">
+    <img src="assets/icono_app.jpg" alt="Icono de la aplicación">
+  </div>
+
+  <div style="margin-left:auto">
+    <button class="info-button" (click)="toggleInstrucciones()">¿Cómo Jugar?</button>
+    <div class="dropdown" (click)="toggleDropdown()">
+      <button class="login-button">
+        <ion-icon name="person"></ion-icon>
+        {{name}}
+        <ion-icon name="chevron-down"></ion-icon>
+      </button>
+      <ul class="dropdown-list" [ngClass]="{'show': showDropdown}">
+        <li (click)="toPrincipal()"><ion-icon name="home"></ion-icon> Inicio</li>
+        <li (click)="logout()"><ion-icon name="log-out"></ion-icon> Cerrar sesión</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+
+  <section class ="mostrarTablero" *ngIf="!mostrarElemento">
+    <div class="tablero">
+      <table width="500" height="500" border="1" cellspacing="2" cellpadding="2" bgcolor="#000000">
+          <tr *ngFor="let row of tableroPadre; let i = index" align="center">
+              <td width="50" height="50" *ngFor="let col of row; let j = index" (click)="multiOnCellClicked(i,j) " bgcolor="#ffffff">
+                  <span *ngIf="col"> {{col}} </span>
+                  <span *ngIf="!col">  </span>
+              </td>
+          </tr>
+      </table>
+      <button class="botonAgregar" (click)="addRows()"> + </button>
+  </div>
+    <div class="tablero1">
+      <table width="500" height="500" border="1" cellspacing="2" cellpadding="2" bgcolor="#000000">
+          <tr *ngFor="let row of tableroPadre1; let i = index" align="center">
+              <td width="50" height="50" *ngFor="let col of row; let j = index" (click)="multiOnCellClicked(i,j) " bgcolor="#ffffff">
+                  <span *ngIf="col"> {{col}} </span>
+                  <span *ngIf="!col">  </span>
+              </td>
+          </tr>
+      </table>
+      <button class="botonAgregar" (click)="addRows()"> + </button>
+  </div>
+  </section>
+</div>
+
 
 <div *ngIf="!mostrarElemento && cerrarSesion">
   <app-login></app-login>

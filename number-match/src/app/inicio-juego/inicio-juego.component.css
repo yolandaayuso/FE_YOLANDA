@@ -13,7 +13,6 @@
   font-size: 100px;
   font-weight: bold;
   font-family: "Montserrat", sans-serif;
-
   color: #0d4b68;
   margin-left: 10px;
   margin-top: 0px;
@@ -228,9 +227,8 @@ section{
 }
 
 span{
-  font-weight: bold;
   user-select: none;
-
+  font-size: 24px;
 }
 
 .botonAgregar{
@@ -254,10 +252,25 @@ span{
   color: #fff;
   font-weight: bold;
   border-radius: 15px;
-
   cursor: pointer;
 
 }
+.multiTablero{
+  position: relative;
+	padding: 0;
+}
 
+.tablero{
+  position: absolute;
+  right: 250px;
+}
 
+.tablero1{
+  position: absolute;
+  left: 250px;
+}
 
+.tablero_gratis{
+  position: absolute;
+
+}

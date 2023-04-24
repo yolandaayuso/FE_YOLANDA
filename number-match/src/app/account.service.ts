@@ -17,7 +17,6 @@ export class AccountService {
   }
 
   login(info: any) : Observable<any>{
-    /*this.socket = new WebSocketSubject('ws://localhost:8081/wsGames').subscribe()*/
     return this.httpClient.put<any>("http://localhost:8081/users/login",info)
   }
 }
