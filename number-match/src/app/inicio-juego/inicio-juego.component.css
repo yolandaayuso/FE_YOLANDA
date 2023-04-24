@@ -111,7 +111,6 @@ margin-right: 50px;
   text-align: right;
   text-justify: auto;
 
-
 }
 
 
@@ -120,23 +119,19 @@ margin-right: 50px;
   flex-direction: column;
   justify-content: center;
   align-items: left;
-  height: 100vh;
   background-color:#eef7ff;
   color : #0d4b68;
-  text-align: left;
-  text-justify: auto;
-
-
-
-
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .instrucciones-dropdown p {
   margin-bottom: 0;
 
 }
-
-
 
 .top-bar {
   background-color: #0d4b68;
@@ -216,7 +211,7 @@ margin-right: 50px;
 .scroll-container {
   height: 100vh;
   overflow-y: scroll;
-
+  margin-top: 50px;
 
 }
 
@@ -235,6 +230,7 @@ section{
 span{
   font-weight: bold;
   user-select: none;
+
 }
 
 .botonAgregar{
@@ -252,15 +248,16 @@ span{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100px;
-
+  width: 400px;
+  height: 40px;
   background: #0d4b68;
   color: #fff;
   font-weight: bold;
-  border: 2px solid rgba(0,0,0);
-  border-radius: 30px;
-  margin-left: 400px;
-  margin-top: 50px;
+  border-radius: 15px;
+
   cursor: pointer;
 
 }
+
+
+
