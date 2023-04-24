@@ -4,8 +4,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { trigger, style, animate, transition ,query,stagger} from '@angular/animations';
 import { Router } from '@angular/router';
 import { GameService } from '../game.service';
+import Swal from 'sweetalert2';
+import { PaymentService } from '../payment.service';
 
-declare let Stripe: any;
 
 @Component({
   selector: 'app-inicio-juego',
