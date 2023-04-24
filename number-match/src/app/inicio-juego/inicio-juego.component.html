@@ -1,5 +1,4 @@
 <section *ngIf="mostrarElemento">
-
    <div class="top-bar">
     <div class="logo">
       <img src="assets/icono_app.jpg" alt="Icono de la aplicación" >
@@ -14,8 +13,8 @@
           <ion-icon name="chevron-down"></ion-icon>
         </button>
         <ul class="dropdown-list" [ngClass]="{'show': showDropdown}">
+          <li (click)="toPrincipal()"><ion-icon name="home"></ion-icon> Inicio</li>
           <li (click)="logout()"><ion-icon name="log-out"></ion-icon> Cerrar sesión</li>
-          <li (click)="toggleDropdown()"><ion-icon name="settings"></ion-icon> Ajustes</li>
         </ul>
       </div>
 
@@ -73,17 +72,36 @@
             <button class="button"  (click)="playFree()">Jugar Versión gratuita</button>
             <button class="button" (click)="playPaid()">Jugar Versión de pago</button>
           </div>
-
-
-
-
     </div>
-
-
   </div>
 
 </section>
+
+
 <div *ngIf="iniciarJuegoGratis && !mostrarElemento">
+
+  <div class="top-bar">
+    <div class="logo">
+      <img src="assets/icono_app.jpg" alt="Icono de la aplicación">
+    </div>
+
+    <div style="margin-left:auto">
+      <button class="info-button" (click)="toggleInstrucciones()">¿Cómo Jugar?</button>
+      <div class="dropdown" (click)="toggleDropdown()">
+        <button class="login-button">
+          <ion-icon name="person"></ion-icon>
+          {{name}}
+          <ion-icon name="chevron-down"></ion-icon>
+        </button>
+        <ul class="dropdown-list" [ngClass]="{'show': showDropdown}">
+          <li (click)="toPrincipal()"><ion-icon name="home"></ion-icon> Inicio</li>
+          <li (click)="logout()"><ion-icon name="log-out"></ion-icon> Cerrar sesión</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
   <section *ngIf="!mostrarElemento">
     <div class="tablero">
         <table width="500" height="500" border="1" cellspacing="2" cellpadding="2" bgcolor="#000000">
@@ -98,26 +116,45 @@
     </div>
   </section>
 </div>
+
+
+
 <div *ngIf="iniciarPago && !mostrarElemento">
-  <section *ngIf="!mostrarElemento">
-    <h1>Bienvenido a la versión premium del juego</h1>
+  <div class="top-bar">
+    <div class="logo">
+      <img src="assets/icono_app.jpg" alt="Icono de la aplicación">
+    </div>
 
-    <form id="payment-form" style="display:none">
-      <div id="card-element"></div>
-      <button id="submit">
-        <div class="spinner hidden" id="spinner"></div>
-        <button class="realizar-pagobttn"><span id="button-text">Pagar</span></button>
-      </button>
-      <p id="card-error" role="alert"></p>
-      <p class="result-message hidden">
-        Payment succeeded, see the result in your
-        <a href="" target="_blank">Stripe dashboard.</a> Refresh the page to pay again.
-      </p>
-    </form>
+    <div style="margin-left:auto">
+      <button class="info-button" (click)="toggleInstrucciones()">¿Cómo Jugar?</button>
+      <div class="dropdown" (click)="toggleDropdown()">
+        <button class="login-button">
+          <ion-icon name="person"></ion-icon>
+          {{name}}
+          <ion-icon name="chevron-down"></ion-icon>
+        </button>
+        <ul class="dropdown-list" [ngClass]="{'show': showDropdown}">
+          <li (click)="toPrincipal()"><ion-icon name="home"></ion-icon> Inicio</li>
+          <li (click)="logout()"><ion-icon name="log-out"></ion-icon> Cerrar sesión</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 
-
-  </section>
+    <section *ngIf="iniciarPago && !mostrarElemento">
+      <p style="font-size: 40px; text-align: center; color: #0d4b68; font-weight: bold;">BIENVENIDO A LA VERSIÓN PREMIUM DEL JUEGO</p>
+      <p style="font-size: 20px; text-align: center; color: #0d4b68;">En ella podrás jugar retarte contra un contrincante online</p>
+      <p style="font-size: 20px; text-align: center; color: #0d4b68;">Si lo deseas, solamente tendras que realizar el pago a continuación de la cantidad de 2 euros por jugada.</p>
+      <form id="payment-form" style="display:none">
+        <div id="card-element"></div>
+        <button id="submit" class="realizar-pagobttn">
+          <div class="spinner hidden" id="spinner"></div>
+          <span id="button-text">Pagar</span>
+        </button>
+      </form>
+    </section>
 </div>
+
 <div *ngIf="!mostrarElemento && cerrarSesion">
   <app-login></app-login>
 </div>
