@@ -47,33 +47,25 @@ export class InicioJuegoComponent implements OnInit{
 
   stripe = Stripe("pk_test_51MqBSKH7OM2285cjwfHb0Vw5mrIDQDS9F0SjZaPdp0DEUznmHxJtL17uT9bfjW75rSHu2bK9kFip2JpFANk7p4UQ00OrH3vfiH")
   ws?:WebSocket
-    waitingForOpponent: boolean = true;
-
-
+  waitingForOpponent: boolean = true;
 
 
   ngOnInit() {
     this.name = sessionStorage.getItem('player') ?? ''; // asigna un string vacío si getItem devuelve null
-
-
   }
 
   constructor(private GameService : GameService,private accountService: AccountService, private PaymentService: PaymentService) { }
 
   instruccionesVisible = false;
-
-
   showDropdown = false;
 
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
   }
 
-
   toggleInstrucciones() {
     this.instruccionesVisible = !this.instruccionesVisible;
   }
-
 
   toPrincipal(){
     this.mostrarElemento = true;
@@ -81,8 +73,6 @@ export class InicioJuegoComponent implements OnInit{
     this.iniciarJuegoGratis = false;
     this.iniciarPago = false;
   }
-
-
 
   showButton() {
     const selectBox = document.querySelector('.login-button') as HTMLSelectElement;
@@ -96,14 +86,12 @@ export class InicioJuegoComponent implements OnInit{
     }
   }
 
-
   logout() {
     this.mostrarElemento = false
     this.cerrarSesion = true
     this.iniciarJuegoPago = false
     this.iniciarJuegoGratis = false
     this.iniciarPago = false
-
   }
 
   playFree() {
@@ -121,7 +109,6 @@ export class InicioJuegoComponent implements OnInit{
   this.pay()
   }
 
-
   requestPaidGame() {
     this.mostrarElemento = false
     this.cerrarSesion = false
@@ -129,18 +116,21 @@ export class InicioJuegoComponent implements OnInit{
 
     this.ws.onopen = () => {
       alert("Esperando a que tu contrincante entre en la partida...")
-
     };
 
     this.ws.onmessage = (event) => {
-      let info = event.data;
-      info = JSON.parse(info);
       if (this.waitingForOpponent) {
-      alert("¡Tu contrincante ha entrado! ¡Comienza el juego!");
-      this.waitingForOpponent= false
+        let info = event.data;
+        info = JSON.parse(info);
+        alert("¡Tu contrincante ha entrado! ¡Comienza el juego!");
+        this.waitingForOpponent= false
+        this.multicreateTable(info);
+      }else{
+        let info = event.data;
+        info = JSON.parse(info);
+        console.log(info);
+        this.updateEnemyBoard(info)
       }
-
-      this.multicreateTable(info);
     };
 
     this.GameService.requestPaidGame().subscribe(
@@ -154,7 +144,6 @@ export class InicioJuegoComponent implements OnInit{
     );
   }
 
-
   multiOnCellClicked(row: number, col: number) {
     if (this.contador == 1) {
       this.multiMatchNumbers(sessionStorage.getItem("player"),this.x1,this.y1,row,col)
@@ -165,8 +154,8 @@ export class InicioJuegoComponent implements OnInit{
       this.contador++
     }
   }
-  onCellClicked(row: number, col: number) {
 
+  onCellClicked(row: number, col: number) {
     if (this.contador == 1) {
       this.matchNumbers(this.x1,this.y1,row,col)
       this.contador = 0
@@ -175,7 +164,6 @@ export class InicioJuegoComponent implements OnInit{
       this.y1 = col
       this.contador++
     }
-    console.log('Se ha hecho clic en la celda ['+row+'] ['+col+']')
   }
 
   createTable(data : any){
@@ -240,6 +228,17 @@ export class InicioJuegoComponent implements OnInit{
       console.log(error)
     })
   }
+
+  multiAddRows(){
+    this.GameService.multiAddRows(this.id).subscribe((data : any) => {
+      this.mostrarElemento = true
+      this.updateOwnBoard(data)
+    },
+    error => {
+      console.log(error)
+    })
+  }
+
   multiMatchNumbers(player:any, x1: number, y1: number, x2: number, y2: number){
     let info = {
       id : this.id,
@@ -251,112 +250,117 @@ export class InicioJuegoComponent implements OnInit{
     }
     this.GameService.multiMatchNumbers(info).subscribe((data : any) => {
       this.mostrarElemento = true
-      this.multicreateTable(data)
+      console.log(data)
+      this.updateOwnBoard(data)
     },
     error => {
       console.log(error)
     })
   }
-pay(){
-this.PaymentService.pay(2).subscribe((token) => {
-  this.token = token;
-  this.showForm();
-}, (error) => {
-    Swal.fire({
+
+  updateEnemyBoard(data : any){
+    const numbers: string[] = data.digits
+    const board: string[][] = [];
+    for (let i = 0; i < 9; i++) {
+      board.push(numbers.slice(i * 9, i * 9 + 9));
+    }
+    this.tableroPadre1 = board
+    this.mostrarElemento = false
+  }
+
+  updateOwnBoard(data : any){
+    const numbers: string[] = data.digits
+    const board: string[][] = [];
+    for (let i = 0; i < 9; i++) {
+      board.push(numbers.slice(i * 9, i * 9 + 9));
+    }
+    this.tableroPadre = board
+    this.mostrarElemento = false
+  }
+
+  pay(){
+    this.PaymentService.pay(2).subscribe((token) => {
+    this.token = token;
+    this.showForm();
+    }, (error) => {
+      Swal.fire({
       title: 'Error',
       text: error.error.message,
       icon: 'error',
       confirmButtonText: 'Aceptar'
+      });
     });
-});
-}
+  }
 
-
-showForm(){
-
-      let elements = this.stripe.elements() //le dira a stripe que hay un objeto en ese elemento que se ha bajado
-      let style = {
-      base: {
-    color: "#32325d", fontFamily: 'Arial, sans-serif',
-    fontSmoothing: "antialiased", fontSize: "16px",
-    "::placeholder": {
-    color: "#32325d"
+  showForm(){
+    let elements = this.stripe.elements() //le dira a stripe que hay un objeto en ese elemento que se ha bajado
+    let style = {
+    base: {
+      color: "#32325d", fontFamily: 'Arial, sans-serif',
+      fontSmoothing: "antialiased", fontSize: "16px",
+      "::placeholder": {
+      color: "#32325d"
+      }
+      },invalid: {
+        fontFamily: 'Arial, sans-serif', color: "#fa755a",
+        iconColor: "#fa755a"
+      }
     }
-        },invalid: {
-      fontFamily: 'Arial, sans-serif', color: "#fa755a",
-      iconColor: "#fa755a"
-      }
-      }
-      let card = elements.create("card", { style : style }) //CREARA UN ELEMTNO LLAMADO CAR ELEMTN OTRO PAYment form
-      card.mount("#card-element")
-      card.on("change", function(event : any) {
+    let card = elements.create("card", { style : style }) //CREARA UN ELEMTNO LLAMADO CAR ELEMTN OTRO PAYment form
+    card.mount("#card-element")
+    card.on("change", function(event : any) {
       document.querySelector("button")!.disabled = event.empty;
       document.querySelector("#card-error")!.textContent =
       event.error ? event.error.message : "";
-      });
-      let self = this
-      let form = document.getElementById("payment-form"); form!.addEventListener("submit", function(event) {
+    });
+    let self = this
+    let form = document.getElementById("payment-form"); form!.addEventListener("submit", function(event) {
       event.preventDefault();
       self.payWithCard(card);
+    });
+    form!.style.display = "block"
+  }
 
+  payWithCard(card: any) {
+    let self = this
+    this.stripe.confirmCardPayment(this.token, {
+      payment_method: {
+          card: card
+      }
+    }).then(function (response: any) {
+    if (response.error) {
+      Swal.fire({
+        title: 'Error',
+        text: response.error.message,
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
       });
-      form!.style.display = "block"
-}
+      } else {
+        if (response.paymentIntent.status === 'succeeded') {
+          self.paymentOk();
+        }}});
+  }
 
-
-payWithCard(card: any) {
-        let self = this
-        this.stripe.confirmCardPayment(this.token, {
-          payment_method: {
-            card: card
-          }
-        }).then(function (response: any) {
-          if (response.error) {
-            Swal.fire({
-              title: 'Error',
-              text: response.error.message,
-              icon: 'error',
-              confirmButtonText: 'Aceptar'
-            });
-
-          } else {
-            if (response.paymentIntent.status === 'succeeded') {
-              self.paymentOk();
-
-
-            }
-          }
-        });
-}
-paymentOk() {
-        let self = this
-
-        let payload={
-          token: this.token ?? '' // si no existe token, que sea un string vacio
-
-        }
-        this.PaymentService.paymentOk(payload.token).subscribe((data : any) => {
-          Swal.fire({
-            title: 'Tu pago ha sido completado',
-            text: '¡Ya puedes retarte en la versión premium!',
-            icon: 'success',
-            confirmButtonText: 'Aceptar'
-          });
-          this.iniciarJuegoPago = true
-          this.iniciarPago = false
-          this.requestPaidGame()
-
-        },
-        error => {
-          console.log(error)
-        });
-
-}
-
-
-
-
-
+  paymentOk() {
+    let self = this
+    let payload={
+      token: this.token ?? '' // si no existe token, que sea un string vacio
+    }
+    this.PaymentService.paymentOk(payload.token).subscribe((data : any) => {
+    Swal.fire({
+      title: 'Tu pago ha sido completado',
+      text: '¡Ya puedes retarte en la versión premium!',
+      icon: 'success',
+      confirmButtonText: 'Aceptar'
+    });
+    this.iniciarJuegoPago = true
+    this.iniciarPago = false
+    this.requestPaidGame()
+    },
+    error => {
+      console.log(error)
+    });
+  }
 }
 
 

@@ -177,9 +177,17 @@
   </div>
 </div>
 
-
-
   <section class ="mostrarTablero" *ngIf="!mostrarElemento">
+    <div class="tablero1">
+      <table width="500" height="500" border="1" cellspacing="2" cellpadding="2" bgcolor="#000000">
+          <tr *ngFor="let row of tableroPadre1;" align="center">
+              <td width="50" height="50" *ngFor="let col of row;" bgcolor="#ffffff">
+                  <span *ngIf="col"> {{col}} </span>
+                  <span *ngIf="!col">  </span>
+              </td>
+          </tr>
+      </table>
+    </div>
     <div class="tablero">
       <table width="500" height="500" border="1" cellspacing="2" cellpadding="2" bgcolor="#000000">
           <tr *ngFor="let row of tableroPadre; let i = index" align="center">
@@ -189,19 +197,8 @@
               </td>
           </tr>
       </table>
-      <button class="botonAgregar" (click)="addRows()"> + </button>
-  </div>
-    <div class="tablero1">
-      <table width="500" height="500" border="1" cellspacing="2" cellpadding="2" bgcolor="#000000">
-          <tr *ngFor="let row of tableroPadre1; let i = index" align="center">
-              <td width="50" height="50" *ngFor="let col of row; let j = index" (click)="multiOnCellClicked(i,j) " bgcolor="#ffffff">
-                  <span *ngIf="col"> {{col}} </span>
-                  <span *ngIf="!col">  </span>
-              </td>
-          </tr>
-      </table>
-      <button class="botonAgregar" (click)="addRows()"> + </button>
-  </div>
+      <button class="botonAgregar" (click)="multiAddRows()"> + </button>
+    </div>
   </section>
 </div>
 

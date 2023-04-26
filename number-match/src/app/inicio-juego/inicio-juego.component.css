@@ -262,15 +262,17 @@ span{
 
 .tablero{
   position: absolute;
-  right: 250px;
+  left: 1200px;
 }
 
 .tablero1{
   position: absolute;
-  left: 250px;
+  right: 1200px;
+  top: 175px;
+  user-select: none;
+  opacity: 0.5;
 }
 
 .tablero_gratis{
   position: absolute;
-
 }
