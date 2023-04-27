@@ -153,55 +153,54 @@
 
 </div>
 
-
 <div class="multiTablero" *ngIf="iniciarJuegoPago && !mostrarElemento">
-
   <div class="top-bar">
-  <div class="logo">
-    <img src="assets/icono_app.jpg" alt="Icono de la aplicación">
-  </div>
+    <div class="logo">
+      <img src="assets/icono_app.jpg" alt="Icono de la aplicación">
+    </div>
 
-  <div style="margin-left:auto">
-    <button class="info-button" (click)="toggleInstrucciones()">¿Cómo Jugar?</button>
-    <div class="dropdown" (click)="toggleDropdown()">
-      <button class="login-button">
-        <ion-icon name="person"></ion-icon>
-        {{name}}
-        <ion-icon name="chevron-down"></ion-icon>
-      </button>
-      <ul class="dropdown-list" [ngClass]="{'show': showDropdown}">
-        <li (click)="toPrincipal()"><ion-icon name="home"></ion-icon> Inicio</li>
-        <li (click)="logout()"><ion-icon name="log-out"></ion-icon> Cerrar sesión</li>
-      </ul>
+    <div style="margin-left:auto">
+      <button class="info-button" (click)="toggleInstrucciones()">¿Cómo Jugar?</button>
+      <div class="dropdown" (click)="toggleDropdown()">
+        <button class="login-button">
+          <ion-icon name="person"></ion-icon>
+          {{name}}
+          <ion-icon name="chevron-down"></ion-icon>
+        </button>
+        <ul class="dropdown-list" [ngClass]="{'show': showDropdown}">
+          <li (click)="toPrincipal()"><ion-icon name="home"></ion-icon> Inicio</li>
+          <li (click)="logout()"><ion-icon name="log-out"></ion-icon> Cerrar sesión</li>
+        </ul>
+      </div>
     </div>
   </div>
-</div>
 
-  <section class ="mostrarTablero" *ngIf="!mostrarElemento">
-    <div class="tablero1">
-      <table width="500" height="500" border="1" cellspacing="2" cellpadding="2" bgcolor="#000000">
+  <section class="mostrarTablero" *ngIf="!mostrarElemento">
+    <div class="contenedorTableros">
+      <div class="tablero1">
+        <table width="500" height="500" border="1" cellspacing="2" cellpadding="2" bgcolor="#000000">
           <tr *ngFor="let row of tableroPadre1;" align="center">
-              <td width="50" height="50" *ngFor="let col of row;" bgcolor="#ffffff">
-                  <span *ngIf="col"> {{col}} </span>
-                  <span *ngIf="!col">  </span>
-              </td>
+            <td width="50" height="50" *ngFor="let col of row;" bgcolor="#ffffff">
+              <span *ngIf="col"> {{col}} </span>
+              <span *ngIf="!col">  </span>
+            </td>
           </tr>
-      </table>
-    </div>
-    <div class="tablero">
-      <table width="500" height="500" border="1" cellspacing="2" cellpadding="2" bgcolor="#000000">
+        </table>
+      </div>
+      <div class="tablero">
+        <table width="500" height="500" border="1" cellspacing="2" cellpadding="2" bgcolor="#000000">
           <tr *ngFor="let row of tableroPadre; let i = index" align="center">
-              <td width="50" height="50" *ngFor="let col of row; let j = index" (click)="multiOnCellClicked(i,j) " bgcolor="#ffffff">
-                  <span *ngIf="col"> {{col}} </span>
-                  <span *ngIf="!col">  </span>
-              </td>
+            <td width="50" height="50" *ngFor="let col of row; let j = index" (click)="multiOnCellClicked(i,j) " bgcolor="#ffffff">
+              <span *ngIf="col"> {{col}} </span>
+              <span *ngIf="!col">  </span>
+            </td>
           </tr>
-      </table>
-      <button class="botonAgregar" (click)="multiAddRows()"> + </button>
+        </table>
+        <button class="botonAgregar" (click)="multiAddRows()"> + </button>
+      </div>
     </div>
   </section>
 </div>
-
 
 <div *ngIf="!mostrarElemento && cerrarSesion">
   <app-login></app-login>

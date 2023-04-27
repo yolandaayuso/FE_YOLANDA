@@ -6,7 +6,6 @@
   align-items: center;
   height: 100vh;
   background-color:#eef7ff;
-
 }
 
 .titulo {
@@ -16,23 +15,21 @@
   color: #0d4b68;
   margin-left: 10px;
   margin-top: 0px;
-  }
+}
 
 .descripcion {
-font-size: 1.5rem;
-color: #0d4b68;
-text-align: center;
-margin-left: 50px;
-margin-right: 50px;
-
-
+  font-size: 1.5rem;
+  color: #0d4b68;
+  text-align: center;
+  margin-left: 50px;
+  margin-right: 50px;
 }
+
 .button-container {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   flex-direction: row;
-
 }
 
 .button {
@@ -65,7 +62,6 @@ margin-right: 50px;
   text-decoration: 80c9eb;
 }
 
-
 .login-button,
 .info-button {
   padding: 10px;
@@ -78,20 +74,13 @@ margin-right: 50px;
   color: #fff;
   margin-left: 20px; /* Agregar margen izquierdo para separar los botones */
   width: 30 px;
-
-
-
 }
 
 .info-button {
   background-color:#0d4b68;
   color: #fff;
   margin-left: 10px; /* Agregar margen izquierdo para separar los botones */
-
 }
-
-
-
 
 .instrucciones {
   position: absolute;
@@ -109,9 +98,7 @@ margin-right: 50px;
   color : #0d4b68;
   text-align: right;
   text-justify: auto;
-
 }
-
 
 .instrucciones-dropdown {
   display: flex;
@@ -149,26 +136,23 @@ margin-right: 50px;
   transition: all 0.3s ease;
   border: 3px solid #ccc; /* Agregar borde al contenedor */
   border-radius: 5px; /* Agregar bordes redondeados al contenedor */
-
 }
 
 .top-bar:hover {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
-
 .logo {
   display: flex;
   align-items: center;
 }
+
 .logo img {
   display: inline-block;
   vertical-align: center;
   width: 40px;
   height: 40px;
   margin-right: 10px;
-
-
 }
 
 .logo span {
@@ -176,12 +160,10 @@ margin-right: 50px;
   font-size: 40px;
 }
 
-
 .dropdown {
   position: relative;
   display: inline-block;
   cursor: pointer;
-
 }
 
 .dropdown-list {
@@ -194,7 +176,6 @@ margin-right: 50px;
   z-index: 1;
   background-color: #0d4b68;
   border-radius: 5px;
-
 }
 
 .show {
@@ -204,18 +185,11 @@ margin-right: 50px;
   width: 150px;
 }
 
-
-
-
 .scroll-container {
   height: 100vh;
   overflow-y: scroll;
   margin-top: 50px;
-
 }
-
-
-
 
 section{
   display: flex;
@@ -255,24 +229,27 @@ span{
   cursor: pointer;
 
 }
-.multiTablero{
-  position: relative;
-	padding: 0;
+
+.contenedorTableros {
+  display: flex;
+  justify-content: center;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-.tablero{
-  position: absolute;
-  left: 1200px;
-}
-
-.tablero1{
-  position: absolute;
-  right: 1200px;
-  top: 175px;
+.tablero1 {
+  float: left;
+  margin-right: 40px;
   user-select: none;
   opacity: 0.5;
 }
 
-.tablero_gratis{
-  position: absolute;
+.tablero {
+  float: right;
+  margin-left: 40px;
 }
+
+
+
+
+
