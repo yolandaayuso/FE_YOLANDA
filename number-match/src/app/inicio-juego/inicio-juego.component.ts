@@ -128,8 +128,18 @@ export class InicioJuegoComponent implements OnInit{
       }else{
         let info = event.data;
         info = JSON.parse(info);
-        console.log(info);
-        this.updateEnemyBoard(info)
+        console.log(info)
+        if(info.winner == null){
+          this.updateEnemyBoard(info)
+        }else{
+          Swal.fire({
+            title: 'Derrota',
+            text: 'Ha ganado tu oponente!!',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+        }
+        
       }
     };
 
@@ -276,6 +286,14 @@ export class InicioJuegoComponent implements OnInit{
     }
     this.tableroPadre = board
     this.mostrarElemento = false
+    if(data.end == true){
+      Swal.fire({
+        title: 'Victoria',
+        text: 'Has ganado!!!',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      });
+    }
   }
 
   pay(){
