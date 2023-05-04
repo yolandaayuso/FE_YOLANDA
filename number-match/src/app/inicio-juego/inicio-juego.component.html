@@ -190,7 +190,7 @@
       <div class="tablero">
         <table width="500" height="500" border="1" cellspacing="2" cellpadding="2" bgcolor="#000000">
           <tr *ngFor="let row of tableroPadre; let i = index" align="center">
-            <td width="50" height="50" *ngFor="let col of row; let j = index" (click)="multiOnCellClicked(i,j) " bgcolor="#ffffff">
+            <td width="50" height="50" *ngFor="let col of row; let j = index" (click)="multiOnCellClicked(i, j)" [ngClass]="{'seleccionada': celdaSeleccionada === getElementAt(i, j)}" bgcolor="#ffffff">
               <span *ngIf="col"> {{col}} </span>
               <span *ngIf="!col">  </span>
             </td>

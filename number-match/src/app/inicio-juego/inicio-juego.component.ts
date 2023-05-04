@@ -42,6 +42,7 @@ export class InicioJuegoComponent implements OnInit{
   x1 : number = 0
   y1 : number = 0
   token? : string
+  celdaSeleccionada: HTMLElement | null = null;
 
   iniciarJuegoPago: boolean = false
 
@@ -58,6 +59,18 @@ export class InicioJuegoComponent implements OnInit{
 
   instruccionesVisible = false;
   showDropdown = false;
+
+  getElementAt(i: number, j: number): HTMLElement | null {
+    const table = document.querySelector('.tablero') as HTMLElement;
+    if (!table) {
+      return null;
+    }
+    const fila = table.querySelector(`tr:nth-child(${i+1})`) as HTMLElement;
+    if (!fila) {
+      return null;
+    }
+    return fila.querySelector(`td:nth-child(${j+1})`) as HTMLElement;
+  }
 
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
@@ -155,6 +168,14 @@ export class InicioJuegoComponent implements OnInit{
   }
 
   multiOnCellClicked(row: number, col: number) {
+    if (this.celdaSeleccionada) {
+      this.celdaSeleccionada.classList.remove('seleccionada');
+    }
+    const nuevaCeldaSeleccionada = this.getElementAt(row,col);
+    if (nuevaCeldaSeleccionada) {
+      nuevaCeldaSeleccionada.classList.add('seleccionada');
+      this.celdaSeleccionada = nuevaCeldaSeleccionada;
+    }    
     if (this.contador == 1) {
       this.multiMatchNumbers(sessionStorage.getItem("player"),this.x1,this.y1,row,col)
       this.contador = 0

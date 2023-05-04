@@ -249,6 +249,11 @@ span{
   margin-left: 40px;
 }
 
+.seleccionada {
+  background-color: cyan;
+}
+
+
 
 
 
