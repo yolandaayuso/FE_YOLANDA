@@ -37,12 +37,14 @@ export class InicioJuegoComponent implements OnInit{
   mostrarFormulario: boolean = true
   tableroPadre : any
   tableroPadre1 : any
+  tableroGratis : any
   id? : string
   contador : number = 0;
   x1 : number = 0
   y1 : number = 0
   token? : string
   celdaSeleccionada: HTMLElement | null = null;
+  loadingToast : any
 
   iniciarJuegoPago: boolean = false
 
@@ -52,7 +54,7 @@ export class InicioJuegoComponent implements OnInit{
 
 
   ngOnInit() {
-    this.name = sessionStorage.getItem('player') ?? ''; // asigna un string vacío si getItem devuelve null
+    this.name = sessionStorage.getItem('player') ?? ''; 
   }
 
   constructor(private GameService : GameService,private accountService: AccountService, private PaymentService: PaymentService) { }
@@ -82,7 +84,6 @@ export class InicioJuegoComponent implements OnInit{
 
   toPrincipal(){
     this.mostrarElemento = true;
-    // Reseteo de los valores de las variables
     this.iniciarJuegoGratis = false;
     this.iniciarPago = false;
   }
@@ -108,7 +109,6 @@ export class InicioJuegoComponent implements OnInit{
   }
 
   playFree() {
-    // código para iniciar la versión gratuita del juego
     this.iniciarJuegoGratis = true
     this.mostrarElemento = false
     this.cerrarSesion = false
@@ -116,10 +116,10 @@ export class InicioJuegoComponent implements OnInit{
   }
 
   playPaid() {
-  this.iniciarPago = true
-  this.mostrarElemento = false
-  this.cerrarSesion = false
-  this.pay()
+    this.iniciarPago = true
+    this.mostrarElemento = false
+    this.cerrarSesion = false
+    this.pay()
   }
 
   requestPaidGame() {
@@ -132,19 +132,22 @@ export class InicioJuegoComponent implements OnInit{
     };
 
     this.ws.onmessage = (event) => {
+      let info = event.data;
+      info = JSON.parse(info);
       if (this.waitingForOpponent) {
-        let info = event.data;
-        info = JSON.parse(info);
         alert("¡Tu contrincante ha entrado! ¡Comienza el juego!");
         this.waitingForOpponent= false
         this.multicreateTable(info);
+        if (this.loadingToast) {
+          Swal.close();
+          this.loadingToast = null;
+        }
       }else{
-        let info = event.data;
-        info = JSON.parse(info);
-        console.log(info)
         if(info.winner == null){
           this.updateEnemyBoard(info)
         }else{
+          const message = { end: info.id };
+          this.ws?.send(JSON.stringify(message))
           Swal.fire({
             title: 'Derrota',
             text: 'Ha ganado tu oponente!!',
@@ -152,14 +155,19 @@ export class InicioJuegoComponent implements OnInit{
             confirmButtonText: 'Aceptar'
           });
         }
-        
       }
     };
 
     this.GameService.requestPaidGame().subscribe(
       (data: any) => {
         this.id = data.id;
-        this.multicreateTable(data);
+        this.loadingToast = Swal.fire({
+          title: 'Esperando Rival...',
+          html: '<img src="assets/cargando-loading-041.gif">',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false
+        });
       },
       (error) => {
         console.log(error);
@@ -203,7 +211,7 @@ export class InicioJuegoComponent implements OnInit{
       for (let i = 0; i < 9; i++) {
         board.push(numbers.slice(i * 9, i * 9 + 9));
       }
-      this.tableroPadre = board
+      this.tableroGratis = board
       this.mostrarElemento = false
   }
 
@@ -281,7 +289,6 @@ export class InicioJuegoComponent implements OnInit{
     }
     this.GameService.multiMatchNumbers(info).subscribe((data : any) => {
       this.mostrarElemento = true
-      console.log(data)
       this.updateOwnBoard(data)
     },
     error => {
