@@ -123,19 +123,31 @@ export class InicioJuegoComponent implements OnInit{
   }
 
   requestPaidGame() {
+    /* ESTO SIRVE PARA COMPROBAR QUE UN USUARIO HA PAGADO CUANDO EL DA AL BOTÓN DE JUGAR ONLINE */
+
+    this.accountService.isVipUser().subscribe(
+      (data : any) => {
+        /* ES CLIENTE VIP Y POR LO TANTO PUEDE JUGAR */
+        alert("Puedes jugar")
+      },
+      (error) =>{
+        /* NO ES CLIENTE VIP Y TIENE QUE PAGAR PARA JUGAR (IR AL PAGO) */ 
+      }
+    )
+
+    /* ESTO SIRVE PARA COMPROBAR QUE UN USUARIO HA PAGADO CUANDO EL DA AL BOTÓN DE JUGAR ONLINE */
+
     this.mostrarElemento = false
     this.cerrarSesion = false
     this.ws = new WebSocket('ws://localhost:8081/wsGames?httpSessionId=' + sessionStorage.getItem("session_id"));
 
     this.ws.onopen = () => {
-      alert("Esperando a que tu contrincante entre en la partida...")
     };
 
     this.ws.onmessage = (event) => {
       let info = event.data;
       info = JSON.parse(info);
       if (this.waitingForOpponent) {
-        alert("¡Tu contrincante ha entrado! ¡Comienza el juego!");
         this.waitingForOpponent= false
         this.multicreateTable(info);
         if (this.loadingToast) {
@@ -401,7 +413,23 @@ export class InicioJuegoComponent implements OnInit{
     });
     this.iniciarJuegoPago = true
     this.iniciarPago = false
+
+    /* ESTO SE HA DE EJECUTAR CUANDO UN USUARIO PAGA Y SE CONVIERTE EN VIP */
+    
+    this.accountService.vipUser().subscribe(
+      (data:any) => {
+
+      },
+      error => {
+        
+      }
+    )
+
+    /* ESTO SE HA DE EJECUTAR CUANDO UN USUARIO PAGA Y SE CONVIERTE EN VIP */
+
+
     this.requestPaidGame()
+
     },
     error => {
       console.log(error)
