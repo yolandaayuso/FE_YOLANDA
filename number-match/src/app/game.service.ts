@@ -31,4 +31,8 @@ export class GameService {
   multiAddRows(id : any) : Observable<any> {
     return this.httpClient.get("http://localhost:8081/games/multiaddrows?id="+id+"&player="+sessionStorage.getItem("player"))
   }
+
+  deleteMatch(idMatch : any) {
+    this.httpClient.get("http://localhost:8081/games/removematch?matchId="+idMatch)
+  }
 }

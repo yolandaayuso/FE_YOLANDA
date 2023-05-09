@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AccountService } from '../account.service';
 import { MatMenuModule } from '@angular/material/menu';
 import { trigger, style, animate, transition ,query,stagger} from '@angular/animations';
@@ -38,7 +38,7 @@ export class InicioJuegoComponent implements OnInit{
   tableroPadre : any
   tableroPadre1 : any
   tableroGratis : any
-  id? : string
+  id! : string
   contador : number = 0;
   x1 : number = 0
   y1 : number = 0
@@ -57,6 +57,12 @@ export class InicioJuegoComponent implements OnInit{
 
   ngOnInit() {
     this.name = sessionStorage.getItem('player') ?? '';
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  onBeforeUnload() {
+    const message = { end: this.id };
+    this.ws?.send(JSON.stringify(message));
   }
 
   constructor(private GameService : GameService,private accountService: AccountService, private PaymentService: PaymentService) { }
@@ -88,6 +94,14 @@ export class InicioJuegoComponent implements OnInit{
     this.mostrarElemento = true;
     this.iniciarJuegoGratis = false;
     this.iniciarPago = false;
+    this.tableroPadre = null
+    this.tableroPadre1 = null
+    this.tableroGratis = null
+    this.waitingForOpponent = true;
+    this.GameService.deleteMatch(this.id)
+    const message = { end: this.id };
+    this.ws?.send(JSON.stringify(message));
+    this.ws?.close()
   }
 
   showButton() {
@@ -108,6 +122,7 @@ export class InicioJuegoComponent implements OnInit{
     this.iniciarJuegoPago = false
     this.iniciarJuegoGratis = false
     this.iniciarPago = false
+    this.ws?.close()
   }
 
   playFree() {
@@ -159,7 +174,7 @@ export class InicioJuegoComponent implements OnInit{
 
     ws.onopen = () => {};
 
-      ws.onmessage = (event) => {
+    ws.onmessage = (event) => {
       let info = event.data;
       info = JSON.parse(info);
 
@@ -169,12 +184,11 @@ export class InicioJuegoComponent implements OnInit{
         if (this.loadingToast) {
           Swal.close();
           this.loadingToast = null;
-          alert("Tu oponente ya está listo, ¡que comience el juego!")
         }
       } else {
         if (info.winner == null) {
           this.updateEnemyBoard(info);
-        } else {
+        }else if (info.leave == null){
           const message = { end: info.id };
           this.ws?.send(JSON.stringify(message));
           Swal.fire({
@@ -183,6 +197,13 @@ export class InicioJuegoComponent implements OnInit{
             icon: 'error',
             confirmButtonText: 'Aceptar'
           });
+        }else{
+          Swal.fire({
+            title: '¡El rival se ha ido!',
+            icon: 'error',
+            confirmButtonText: 'Aceptar'
+          });
+          this.toPrincipal()
         }
       }
     };
