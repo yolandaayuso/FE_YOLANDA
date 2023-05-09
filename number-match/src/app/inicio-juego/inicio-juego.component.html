@@ -139,6 +139,7 @@
   </div>
 
     <section *ngIf="iniciarPago && !mostrarElemento">
+      <section *ngIf=" isNotPremium">
       <p style="font-size: 40px; text-align: center; color: #0d4b68; font-weight: bold;">BIENVENIDO A LA VERSIÓN PREMIUM DEL JUEGO</p>
       <p style="font-size: 20px; text-align: center; color: #0d4b68;">En ella podrás jugar retarte contra un contrincante online</p>
       <p style="font-size: 20px; text-align: center; color: #0d4b68;">Si lo deseas, solamente tendras que realizar el pago a continuación de la cantidad de 2 euros por jugada.</p>
@@ -149,7 +150,11 @@
           <span id="button-text">Pagar</span>
         </button>
       </form>
+      <br>
+      <br>
+      <button class="iniciarOnline" (click)="requestPaidGame()">Iniciar Juego Online</button>
     </section>
+  </section>
 
 </div>
 

@@ -51,10 +51,12 @@ export class InicioJuegoComponent implements OnInit{
   stripe = Stripe("pk_test_51MqBSKH7OM2285cjwfHb0Vw5mrIDQDS9F0SjZaPdp0DEUznmHxJtL17uT9bfjW75rSHu2bK9kFip2JpFANk7p4UQ00OrH3vfiH")
   ws?:WebSocket
   waitingForOpponent: boolean = true;
+  isNotPremium: boolean = false;
+  isPremium: boolean = false;
 
 
   ngOnInit() {
-    this.name = sessionStorage.getItem('player') ?? ''; 
+    this.name = sessionStorage.getItem('player') ?? '';
   }
 
   constructor(private GameService : GameService,private accountService: AccountService, private PaymentService: PaymentService) { }
@@ -116,62 +118,77 @@ export class InicioJuegoComponent implements OnInit{
   }
 
   playPaid() {
+
     this.iniciarPago = true
     this.mostrarElemento = false
     this.cerrarSesion = false
-    this.pay()
+    this.accountService.isVipUser().subscribe(  // Comprobamos si el usuario es premium
+      (data: any) => {
+      this.iniciarJuegoPago = true;
+      this.requestPaidGame();
+      },
+      (error) => {
+        this.pay();
+      });
+  }
+  requestPaidGame() {
+    this.accountService.isVipUser().subscribe(
+      (data: any) => {
+        // ES CLIENTE VIP Y POR LO TANTO PUEDE JUGAR
+        this.iniciarJuegoPago = true;
+        this.iniciarPago = false;
+        this.mostrarElemento = false;
+        this.cerrarSesion = false;
+        this.ws = new WebSocket('ws://localhost:8081/wsGames?httpSessionId=' + sessionStorage.getItem("session_id"));
+        this.continueGame(this.ws)
+      },
+      (error) => {
+        // NO ES CLIENTE VIP Y TIENE QUE PAGAR PARA JUGAR (MOSTRAR MENSAJE)
+        Swal.fire({
+          title: 'Error',
+          text: 'No eres cliente VIP, por lo que no puedes jugar. ¿Quieres serlo? Paga tan solo 2 euros y podrás jugar siempre que quieras.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    );
   }
 
-  requestPaidGame() {
-    /* ESTO SIRVE PARA COMPROBAR QUE UN USUARIO HA PAGADO CUANDO EL DA AL BOTÓN DE JUGAR ONLINE */
+  continueGame(ws:WebSocket) {
 
-    this.accountService.isVipUser().subscribe(
-      (data : any) => {
-        /* ES CLIENTE VIP Y POR LO TANTO PUEDE JUGAR */
-        alert("Puedes jugar")
-      },
-      (error) =>{
-        /* NO ES CLIENTE VIP Y TIENE QUE PAGAR PARA JUGAR (IR AL PAGO) */ 
-      }
-    )
 
-    /* ESTO SIRVE PARA COMPROBAR QUE UN USUARIO HA PAGADO CUANDO EL DA AL BOTÓN DE JUGAR ONLINE */
+    ws.onopen = () => {};
 
-    this.mostrarElemento = false
-    this.cerrarSesion = false
-    this.ws = new WebSocket('ws://localhost:8081/wsGames?httpSessionId=' + sessionStorage.getItem("session_id"));
-
-    this.ws.onopen = () => {
-    };
-
-    this.ws.onmessage = (event) => {
+      ws.onmessage = (event) => {
       let info = event.data;
       info = JSON.parse(info);
+
       if (this.waitingForOpponent) {
-        this.waitingForOpponent= false
+        this.waitingForOpponent = false;
         this.multicreateTable(info);
         if (this.loadingToast) {
           Swal.close();
           this.loadingToast = null;
+          alert("Tu oponente ya está listo, ¡que comience el juego!")
         }
-      }else{
-        if(info.winner == null){
-          this.updateEnemyBoard(info)
-        }else{
+      } else {
+        if (info.winner == null) {
+          this.updateEnemyBoard(info);
+        } else {
           const message = { end: info.id };
-          this.ws?.send(JSON.stringify(message))
+          this.ws?.send(JSON.stringify(message));
           Swal.fire({
             title: 'Derrota',
-            text: 'Ha ganado tu oponente!!',
+            text: '¡Ha ganado tu oponente!',
             icon: 'error',
             confirmButtonText: 'Aceptar'
           });
         }
       }
     };
-
     this.GameService.requestPaidGame().subscribe(
       (data: any) => {
+        if (this.waitingForOpponent == true)  {
         this.id = data.id;
         this.loadingToast = Swal.fire({
           title: 'Esperando Rival...',
@@ -180,12 +197,20 @@ export class InicioJuegoComponent implements OnInit{
           allowEscapeKey: false,
           showConfirmButton: false
         });
+        }
+        else{
+          this.id = data.id;
+        }
       },
+
       (error) => {
         console.log(error);
       }
     );
+
+
   }
+
 
   multiOnCellClicked(row: number, col: number) {
     if (this.celdaSeleccionada) {
@@ -195,7 +220,7 @@ export class InicioJuegoComponent implements OnInit{
     if (nuevaCeldaSeleccionada) {
       nuevaCeldaSeleccionada.classList.add('seleccionada');
       this.celdaSeleccionada = nuevaCeldaSeleccionada;
-    }    
+    }
     if (this.contador == 1) {
       this.multiMatchNumbers(sessionStorage.getItem("player"),this.x1,this.y1,row,col)
       this.contador = 0
@@ -335,20 +360,34 @@ export class InicioJuegoComponent implements OnInit{
       });
     }
   }
-
-  pay(){
-    this.PaymentService.pay(2).subscribe((token) => {
-    this.token = token;
-    this.showForm();
-    }, (error) => {
+pay() {
+  // Verificar si el usuario es VIP antes de realizar el pago
+  this.accountService.isVipUser().subscribe(
+    (data) => {
+      this.isPremium = true;
+      this.isNotPremium = false;
+       return; // Salir del método si el usuario es VIP
+  },  (error) => {
+    this.isPremium = false;
+    this.isNotPremium = true;
+  // Si el usuario no es VIP, realizar el pago normalmente
+  this.PaymentService.pay(2).subscribe(
+    (token) => {
+      this.token = token;
+      this.showForm();
+    },
+    (error) => {
       Swal.fire({
-      title: 'Error',
-      text: error.error.message,
-      icon: 'error',
-      confirmButtonText: 'Aceptar'
+        title: 'Error',
+        text: error.error.message,
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
       });
-    });
-  }
+    }
+  );
+  });
+}
+
 
   showForm(){
     let elements = this.stripe.elements() //le dira a stripe que hay un objeto en ese elemento que se ha bajado
@@ -411,30 +450,22 @@ export class InicioJuegoComponent implements OnInit{
       icon: 'success',
       confirmButtonText: 'Aceptar'
     });
-    this.iniciarJuegoPago = true
-    this.iniciarPago = false
 
     /* ESTO SE HA DE EJECUTAR CUANDO UN USUARIO PAGA Y SE CONVIERTE EN VIP */
-    
     this.accountService.vipUser().subscribe(
       (data:any) => {
 
       },
       error => {
-        
+        console.log(error)
       }
     )
-
-    /* ESTO SE HA DE EJECUTAR CUANDO UN USUARIO PAGA Y SE CONVIERTE EN VIP */
-
-
-    this.requestPaidGame()
-
     },
     error => {
       console.log(error)
     });
   }
+
 }
 
 
