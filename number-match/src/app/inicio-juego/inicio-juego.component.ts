@@ -102,6 +102,18 @@ export class InicioJuegoComponent implements OnInit{
     this.ws?.close()
   }
 
+  toPrincipal2(){
+    this.mostrarElemento = true;
+    this.iniciarJuegoGratis = false;
+    this.iniciarPago = false;
+    this.tableroPadre = null
+    this.tableroPadre1 = null
+    this.tableroGratis = null
+    this.waitingForOpponent = true;
+    this.GameService.deleteMatch(this.id)
+    this.ws?.close()
+  }
+
   showButton() {
     const selectBox = document.querySelector('.login-button') as HTMLSelectElement;
     const selectedValue = selectBox.value;
@@ -177,8 +189,6 @@ export class InicioJuegoComponent implements OnInit{
     ws.onmessage = (event) => {
       let info = event.data;
       info = JSON.parse(info);
-      
-      console.log(info)
 
       if (this.waitingForOpponent) {
         this.waitingForOpponent = false;
@@ -191,13 +201,23 @@ export class InicioJuegoComponent implements OnInit{
         if (info.winner == null) {
           this.updateEnemyBoard(info);
         }else if (info.leave == null){
-          Swal.fire({
-            title: 'Derrota',
-            text: '¡Ha ganado tu oponente!',
-            icon: 'error',
-            confirmButtonText: 'Aceptar'
-          });
-          this.toPrincipal()
+          if(info.winner == sessionStorage.getItem("player")){
+            Swal.fire({
+              title: 'Victoria',
+              text: 'Has ganado!!!',
+              icon: 'success',
+              confirmButtonText: 'Aceptar'
+            });
+            this.toPrincipal2()
+          }else{
+            Swal.fire({
+              title: 'Derrota',
+              text: '¡Ha ganado tu oponente!',
+              icon: 'error',
+              confirmButtonText: 'Aceptar'
+            });
+            this.toPrincipal2()
+          }
         }else{
           Swal.fire({
             title: '¡El rival se ha ido!',
