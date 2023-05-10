@@ -1,8 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { AccountService } from '../account.service';
-import { MatMenuModule } from '@angular/material/menu';
 import { trigger, style, animate, transition ,query,stagger} from '@angular/animations';
-import { Router } from '@angular/router';
 import { GameService } from '../game.service';
 import Swal from 'sweetalert2';
 import { PaymentService } from '../payment.service';
@@ -122,6 +120,9 @@ export class InicioJuegoComponent implements OnInit{
     this.iniciarJuegoPago = false
     this.iniciarJuegoGratis = false
     this.iniciarPago = false
+    this.GameService.deleteMatch(this.id)
+    const message = { end: this.id };
+    this.ws?.send(JSON.stringify(message));
     this.ws?.close()
   }
 
@@ -133,11 +134,10 @@ export class InicioJuegoComponent implements OnInit{
   }
 
   playPaid() {
-
     this.iniciarPago = true
     this.mostrarElemento = false
     this.cerrarSesion = false
-    this.accountService.isVipUser().subscribe(  // Comprobamos si el usuario es premium
+    this.accountService.isVipUser().subscribe(  
       (data: any) => {
       this.iniciarJuegoPago = true;
       this.requestPaidGame();
@@ -177,6 +177,8 @@ export class InicioJuegoComponent implements OnInit{
     ws.onmessage = (event) => {
       let info = event.data;
       info = JSON.parse(info);
+      
+      console.log(info)
 
       if (this.waitingForOpponent) {
         this.waitingForOpponent = false;
@@ -189,14 +191,13 @@ export class InicioJuegoComponent implements OnInit{
         if (info.winner == null) {
           this.updateEnemyBoard(info);
         }else if (info.leave == null){
-          const message = { end: info.id };
-          this.ws?.send(JSON.stringify(message));
           Swal.fire({
             title: 'Derrota',
             text: '¡Ha ganado tu oponente!',
             icon: 'error',
             confirmButtonText: 'Aceptar'
           });
+          this.toPrincipal()
         }else{
           Swal.fire({
             title: '¡El rival se ha ido!',
@@ -319,7 +320,18 @@ export class InicioJuegoComponent implements OnInit{
     }
     this.GameService.matchNumbers(info).subscribe((data : any) => {
       this.mostrarElemento = true
-      this.createTable(data)
+      if(data.board.end == true){
+        Swal.fire({
+          title: 'Victoria',
+          text: 'Has ganado!!!',
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        });
+        this.toPrincipal()
+      }else{
+        this.createTable(data)
+      }
+      
     },
     error => {
       console.log(error)
@@ -379,19 +391,17 @@ export class InicioJuegoComponent implements OnInit{
         icon: 'success',
         confirmButtonText: 'Aceptar'
       });
+      this.toPrincipal()
     }
   }
 pay() {
-  // Verificar si el usuario es VIP antes de realizar el pago
   this.accountService.isVipUser().subscribe(
     (data) => {
       this.isPremium = true;
       this.isNotPremium = false;
-       return; // Salir del método si el usuario es VIP
   },  (error) => {
     this.isPremium = false;
     this.isNotPremium = true;
-  // Si el usuario no es VIP, realizar el pago normalmente
   this.PaymentService.pay(2).subscribe(
     (token) => {
       this.token = token;
