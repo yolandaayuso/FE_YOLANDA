@@ -25,6 +25,7 @@ declare let Stripe: any;
 })
 export class InicioJuegoComponent implements OnInit{
 
+
   mostrarElemento: boolean = true
   iniciarJuego: boolean = true
   cerrarSesion: boolean = false;
@@ -88,6 +89,8 @@ export class InicioJuegoComponent implements OnInit{
     this.instruccionesVisible = !this.instruccionesVisible;
   }
 
+
+
   toPrincipal(){
     this.mostrarElemento = true;
     this.iniciarJuegoGratis = false;
@@ -149,7 +152,7 @@ export class InicioJuegoComponent implements OnInit{
     this.iniciarPago = true
     this.mostrarElemento = false
     this.cerrarSesion = false
-    this.accountService.isVipUser().subscribe(  
+    this.accountService.isVipUser().subscribe(
       (data: any) => {
       this.iniciarJuegoPago = true;
       this.requestPaidGame();
@@ -184,10 +187,17 @@ export class InicioJuegoComponent implements OnInit{
   continueGame(ws:WebSocket) {
 
 
-    ws.onopen = () => {};
+    ws.onopen = () => {
+      console.log('Conectado a WS');
+    };
 
     ws.onmessage = (event) => {
+
+      console.log('Mensaje recibido: ' + event.data);
       let info = event.data;
+      console.log(info);
+      console.log(info.winner);
+      console.log(info.leave);
       info = JSON.parse(info);
 
       if (this.waitingForOpponent) {
@@ -199,6 +209,7 @@ export class InicioJuegoComponent implements OnInit{
         }
       } else {
         if (info.winner == null) {
+
           this.updateEnemyBoard(info);
         }else if (info.leave == null){
           if(info.winner == sessionStorage.getItem("player")){
@@ -219,6 +230,8 @@ export class InicioJuegoComponent implements OnInit{
             this.toPrincipal2()
           }
         }else{
+          console.log("El rival se ha ido");
+          console.log(info.leave);
           Swal.fire({
             title: '¡El rival se ha ido!',
             icon: 'error',
@@ -351,7 +364,7 @@ export class InicioJuegoComponent implements OnInit{
       }else{
         this.createTable(data)
       }
-      
+
     },
     error => {
       console.log(error)

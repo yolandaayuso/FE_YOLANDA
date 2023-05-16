@@ -26,4 +26,9 @@ export class AccountService {
     return this.httpClient.get<any>("http://localhost:8081/users/isvipuser?userName="+sessionStorage.getItem("player"))
   }
 
+  recuperarcontraseña(info: any) : Observable<any>{
+    return this.httpClient.post<any>("http://localhost:8081/users/recuperarcontraseña",info)
+
+  }
+
 }

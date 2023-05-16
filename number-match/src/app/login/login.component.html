@@ -1,4 +1,4 @@
-<section *ngIf="mostrarComponente">
+<section *ngIf="mostrarComponente && !interfaceBlocked && !recuperarPwd">
     <body *ngIf="loginVar">
         <section>
             <div class="titulo">
@@ -23,6 +23,9 @@
                         </div>
                         <button (click)="login()">Log in</button>
                         <div class="register">
+                          <p (click) ="toPWD()">¿Has olvidado tu contraseña?<a href="#">Recuperala!</a></p>
+                      </div>
+                        <div class="register">
                             <p (click) ="changeLogin()">Don't have an account? <a href="#">Register</a></p>
                         </div>
                     </form>
@@ -32,47 +35,81 @@
     </body>
 
     <body *ngIf="!loginVar">
-        <section>
-            <div class="titulo">
-                <h1>Number Match</h1>
-            </div>
-            <div class="form-box2">
-                <div class="form-value">
-                    <form action="">
-                        <h2>Register</h2>
-                        <div class="inputbox">
-                            <ion-icon name="person-outline"></ion-icon>
-                            <input type="text" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" required>
-                            <label for="">User</label>
-                        </div>
-                        <div class="inputbox">
-                            <ion-icon name="mail-outline"></ion-icon>
-                            <input type="text" [(ngModel)]="email"  [ngModelOptions]="{standalone: true}" required>
-                            <label for="">Email</label>
-                        </div>
-                        <div class="inputbox">
-                            <ion-icon name="lock-closed-outline"></ion-icon>
-                            <input type="password" [(ngModel)]="pwd1" [ngModelOptions]="{standalone: true}" required>
-                            <label for="">Password</label>
-                        </div>
-                        <div class="inputbox">
-                            <ion-icon name="lock-closed-outline"></ion-icon>
-                            <input type="password" [(ngModel)]="pwd2" [ngModelOptions]="{standalone: true}" required>
-                            <label for="">Repeat Password</label>
-                        </div>
-                        <button (click)="register()">Register</button>
-                        <div class="Login">
-                            <p (click)="changeLogin()">Already have an account? <a href="#">Log In</a></p>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </section>
-    </body>
+      <section>
+          <div class="titulo">
+              <h1>Number Match</h1>
+          </div>
+          <div class="form-box2">
+              <div class="form-value">
+                  <form action="">
+                      <h2>Register</h2>
+                      <div class="inputbox">
+                          <ion-icon name="person-outline"></ion-icon>
+                          <input type="text" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" required (paste)="disablePaste($event)">
+                          <label for="">User</label>
+                      </div>
+                      <div class="inputbox">
+                          <ion-icon name="mail-outline"></ion-icon>
+                          <input type="text" [(ngModel)]="email"  [ngModelOptions]="{standalone: true}" required (paste)="disablePaste($event)">
+                          <label for="">Email</label>
+                      </div>
+                      <div class="inputbox">
+                          <ion-icon name="lock-closed-outline"></ion-icon>
+                          <input type="password" [(ngModel)]="pwd1" [ngModelOptions]="{standalone: true}" required (paste)="disablePaste($event)">
+                          <label for="">Password</label>
+                      </div>
+                      <div class="inputbox">
+                          <ion-icon name="lock-closed-outline"></ion-icon>
+                          <input type="password" [(ngModel)]="pwd2" [ngModelOptions]="{standalone: true}" required (paste)="disablePaste($event)">
+                          <label for="">Repeat Password</label>
+                      </div>
+                      <button (click)="register()">Register</button>
+                      <div class="Login">
+                          <p (click)="changeLogin()">Already have an account? <a href="#">Log In</a></p>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </section>
+  </body>
 </section>
-<div *ngIf="!mostrarComponente">
+<div *ngIf="!mostrarComponente && !interfaceBlocked && !recuperarPwd">
     <app-inicio-juego></app-inicio-juego>
 </div>
 
+<div class="blocked" *ngIf="interfaceBlocked && mostrarComponente && !recuperarPwd">
+  <body class="blocked">
+      <div class="blocked-message">
+      <ion-icon name="time" class="clock-icon"></ion-icon>
+      <h1>Demasiados intentos de inicio de sesión incorrectos. Por favor, espere un minuto hasta que pueda volver a iniciar sesión.</h1>
+    </div>
+  </body>
+
+</div>
+
+<div class ="recuperarPWD"  *ngIf="recuperarPwd && mostrarComponente">
+  <div class="form-box">
+    <div class="form-value">
+        <form action="">
+            <h2>¡Recupérala!</h2>
+            <div class="inputbox">
+                <ion-icon name="person-outline"></ion-icon>
+                <input type="text" [(ngModel)]="name" [ngModelOptions]="{standalone: true}" required>
+                <label for="">User</label>
+            </div>
+            <div class="inputbox">
+                <ion-icon name="lock-closed-outline"></ion-icon>
+                <input type="password" [(ngModel)]="pwd1" [ngModelOptions]="{standalone: true}" required>
+                <label for="">Password</label>
+            </div>
+            <button (click)="recuperarcontrasena()">Recuperar</button>
+
+            <div class="register">
+              <p (click)="toLogin()">Loguin <a href="#">Log In</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+</div>
 
 
